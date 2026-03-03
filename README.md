@@ -79,3 +79,14 @@ I ristoratori possono registrarsi, gestire il proprio ristorante e visualizzare 
 | DELETE | `/api/piatti/{id}`          | Elimina piatto (solo RISTORATORE)  |
 
 ---
+
+## Autore
+
+**Filippo Timo**  
+[![GitHub](https://img.shields.io/badge/GitHub-filippotimo-black?style=flat-square&logo=github)](https://github.com/Filippo-Timo)
+
+---
+
+## Licenza
+
+Questo progetto è sviluppato a scopo didattico.
