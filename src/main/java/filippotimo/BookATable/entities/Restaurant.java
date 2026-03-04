@@ -1,5 +1,6 @@
 package filippotimo.BookATable.entities;
 
+import filippotimo.BookATable.entities.enums.RestaurantType;
 import jakarta.persistence.*;
 
 import java.util.UUID;

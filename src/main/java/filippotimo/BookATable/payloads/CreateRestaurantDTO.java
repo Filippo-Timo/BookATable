@@ -1,6 +1,6 @@
 package filippotimo.BookATable.payloads;
 
-import filippotimo.BookATable.entities.RestaurantType;
+import filippotimo.BookATable.entities.enums.RestaurantType;
 import jakarta.validation.constraints.*;
 
 public record CreateRestaurantDTO(

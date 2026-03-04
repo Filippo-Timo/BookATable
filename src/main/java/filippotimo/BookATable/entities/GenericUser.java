@@ -1,5 +1,6 @@
 package filippotimo.BookATable.entities;
 
+import filippotimo.BookATable.entities.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

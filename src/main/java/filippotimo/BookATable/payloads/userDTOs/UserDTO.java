@@ -1,4 +1,4 @@
-package filippotimo.BookATable.payloads;
+package filippotimo.BookATable.payloads.userDTOs;
 
 import jakarta.validation.constraints.*;
 

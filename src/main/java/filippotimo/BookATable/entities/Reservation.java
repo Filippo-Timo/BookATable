@@ -1,5 +1,6 @@
 package filippotimo.BookATable.entities;
 
+import filippotimo.BookATable.entities.enums.SeatingPreference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
