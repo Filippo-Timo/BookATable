@@ -1,5 +1,6 @@
 package filippotimo.BookATable.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import filippotimo.BookATable.entities.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({
+        "password",
+        "authorities",
+        "accountNonExpired",
+        "accountNonLocked",
+        "credentialsNonExpired",
+        "enabled"
+})
 public class GenericUser implements UserDetails {
 
     @Id

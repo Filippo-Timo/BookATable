@@ -1,11 +1,15 @@
 package filippotimo.BookATable.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "dishes")
+@JsonIgnoreProperties({
+        "menu"
+})
 public class Dish {
 
     @Id
