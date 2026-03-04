@@ -1,34 +1,43 @@
 package filippotimo.BookATable.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class GenericUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private String email;
     private String password;
     private String firstName;
     private String lastName;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
     private LocalDate birthDate;
     private String city;
     private String avatar;
 
-    public User() {
+
+    public GenericUser() {
     }
 
-    public User(String email, String password, String firstName, String lastName, LocalDate birthDate, String city, String avatar) {
+    public GenericUser(String email,
+                       String password,
+                       String firstName,
+                       String lastName,
+                       LocalDate birthDate,
+                       String city,
+                       String avatar) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -36,6 +45,18 @@ public class User {
         this.birthDate = birthDate;
         this.city = city;
     }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
 
     public UUID getId() {
         return id;
@@ -93,5 +114,21 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+
+    @Override
+    public String toString() {
+        return "GenericUser { " +
+                "id = " + id +
+                ", email = " + email + '\'' +
+                ", password = " + password + '\'' +
+                ", firstName = " + firstName + '\'' +
+                ", lastName = " + lastName + '\'' +
+                ", role = " + role +
+                ", birthDate = " + birthDate +
+                ", city = " + city + '\'' +
+                ", avatar = " + avatar + '\'' +
+                '}';
     }
 }
