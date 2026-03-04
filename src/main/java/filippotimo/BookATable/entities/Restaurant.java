@@ -128,7 +128,8 @@ public class Restaurant {
                 ", description = " + description + '\'' +
                 ", availableSeatsIndoor = " + availableSeatsIndoor +
                 ", availableSeatsOutdoor = " + availableSeatsOutdoor +
-                ", phone = " + phone + '\'' +
+                ", phone = " + phone +
+                " " +
                 '}';
     }
 }

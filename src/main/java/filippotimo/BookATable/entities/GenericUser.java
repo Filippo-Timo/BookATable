@@ -22,7 +22,7 @@ public class GenericUser implements UserDetails {
     private String firstName;
     private String lastName;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role; //  RESTAURANT_OWNER, USER
     private LocalDate birthDate;
     private String city;
     private String avatar;
@@ -121,14 +121,15 @@ public class GenericUser implements UserDetails {
     public String toString() {
         return "GenericUser { " +
                 "id = " + id +
-                ", email = " + email + '\'' +
-                ", password = " + password + '\'' +
-                ", firstName = " + firstName + '\'' +
-                ", lastName = " + lastName + '\'' +
+                ", email = " + email +
+                ", password = " + password +
+                ", firstName = " + firstName +
+                ", lastName = " + lastName +
                 ", role = " + role +
                 ", birthDate = " + birthDate +
-                ", city = " + city + '\'' +
-                ", avatar = " + avatar + '\'' +
+                ", city = " + city +
+                ", avatar = " + avatar +
+                " " +
                 '}';
     }
 }
