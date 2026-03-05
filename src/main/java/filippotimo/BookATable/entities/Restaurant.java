@@ -26,10 +26,10 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     private RestaurantType restaurantType;
 
-    private Long maxSeats;
+    private Integer maxSeats;
     private String description;
-    private Long availableSeatsIndoor;
-    private Long availableSeatsOutdoor;
+    private Integer availableSeatsIndoor;
+    private Integer availableSeatsOutdoor;
     private String phone;
 
     public Restaurant() {
@@ -38,10 +38,10 @@ public class Restaurant {
     public Restaurant(GenericUser owner,
                       String city,
                       RestaurantType restaurantType,
-                      Long maxSeats,
+                      Integer maxSeats,
                       String description,
-                      Long availableSeatsIndoor,
-                      Long availableSeatsOutdoor,
+                      Integer availableSeatsIndoor,
+                      Integer availableSeatsOutdoor,
                       String phone) {
         this.owner = owner;
         this.city = city;
