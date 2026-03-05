@@ -7,6 +7,7 @@ import filippotimo.BookATable.payloads.restaurantDTOs.CreateRestaurantDTO;
 import filippotimo.BookATable.payloads.restaurantDTOs.UpdateRestaurantDTO;
 import filippotimo.BookATable.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +32,12 @@ public class RestaurantController {
     // 1. ---------- GET /api/restaurants ----------
 
     @GetMapping
-    public List<Restaurant> findAll() {
-        return restaurantService.findAll();
+    public Page<Restaurant> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "city") String orderBy,
+            @RequestParam(defaultValue = "asc") String sortCriteria) {
+        return restaurantService.findAll(page, size, orderBy, sortCriteria);
     }
 
     // 2. ---------- GET /api/restaurants/{id} ----------
