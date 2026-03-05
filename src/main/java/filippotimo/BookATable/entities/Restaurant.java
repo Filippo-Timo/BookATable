@@ -81,11 +81,11 @@ public class Restaurant {
         this.restaurantType = restaurantType;
     }
 
-    public Long getMaxSeats() {
+    public Integer getMaxSeats() {
         return maxSeats;
     }
 
-    public void setMaxSeats(Long maxSeats) {
+    public void setMaxSeats(Integer maxSeats) {
         this.maxSeats = maxSeats;
     }
 
@@ -97,19 +97,19 @@ public class Restaurant {
         this.description = description;
     }
 
-    public Long getAvailableSeatsIndoor() {
+    public Integer getAvailableSeatsIndoor() {
         return availableSeatsIndoor;
     }
 
-    public void setAvailableSeatsIndoor(Long availableSeatsIndoor) {
+    public void setAvailableSeatsIndoor(Integer availableSeatsIndoor) {
         this.availableSeatsIndoor = availableSeatsIndoor;
     }
 
-    public Long getAvailableSeatsOutdoor() {
+    public Integer getAvailableSeatsOutdoor() {
         return availableSeatsOutdoor;
     }
 
-    public void setAvailableSeatsOutdoor(Long availableSeatsOutdoor) {
+    public void setAvailableSeatsOutdoor(Integer availableSeatsOutdoor) {
         this.availableSeatsOutdoor = availableSeatsOutdoor;
     }
 

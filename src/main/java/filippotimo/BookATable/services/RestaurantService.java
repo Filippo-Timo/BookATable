@@ -6,7 +6,7 @@ import filippotimo.BookATable.entities.enums.RestaurantType;
 import filippotimo.BookATable.entities.enums.Role;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.exceptions.UnauthorizedException;
-import filippotimo.BookATable.payloads.CreateRestaurantDTO;
+import filippotimo.BookATable.payloads.restaurantDTOs.CreateRestaurantDTO;
 import filippotimo.BookATable.repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
