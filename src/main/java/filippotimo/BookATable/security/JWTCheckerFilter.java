@@ -1,7 +1,6 @@
 package filippotimo.BookATable.security;
 
 import filippotimo.BookATable.entities.GenericUser;
-import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.services.GenericUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,8 +36,11 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
 
         // 1) VERIFICO L'AUTHORIZATION HEADER
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            throw new UnauthorizedException("Token mancante o in formato errato!");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        // throw new UnauthorizedException("Token mancante o in formato errato!");
 
         // 2) ESTRAGGO IL TOKEN
         String accessToken = authHeader.replace("Bearer ", "");
