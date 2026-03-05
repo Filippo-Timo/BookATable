@@ -7,6 +7,7 @@ import filippotimo.BookATable.entities.enums.Role;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.restaurantDTOs.CreateRestaurantDTO;
+import filippotimo.BookATable.payloads.restaurantDTOs.UpdateRestaurantDTO;
 import filippotimo.BookATable.repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,40 @@ public class RestaurantService {
                 city,
                 RestaurantType.valueOf(restaurantType.toUpperCase())
         );
+    }
+
+    // ---------- UPDATE ----------
+
+    public Restaurant update(UUID id, UpdateRestaurantDTO body, GenericUser currentUser) {
+
+        Restaurant restaurant = findById(id);
+
+        // Controllo che il ristorante appartenga all'utente loggato
+        if (!restaurant.getOwner().getId().equals(currentUser.getId()))
+            throw new UnauthorizedException("You are not the owner of this restaurant!");
+
+        restaurant.setCity(body.city());
+        restaurant.setRestaurantType(body.restaurantType());
+        restaurant.setMaxSeats(body.maxSeats());
+        restaurant.setDescription(body.description());
+        restaurant.setAvailableSeatsIndoor(body.availableSeatsIndoor());
+        restaurant.setAvailableSeatsOutdoor(body.availableSeatsOutdoor());
+        restaurant.setPhone(body.phone());
+
+        return restaurantRepository.save(restaurant);
+    }
+
+    // ---------- DELETE ----------
+
+    public void delete(UUID id, GenericUser currentUser) {
+
+        Restaurant restaurant = findById(id);
+
+        // Controllo che il ristorante appartenga all'utente loggato
+        if (!restaurant.getOwner().getId().equals(currentUser.getId()))
+            throw new UnauthorizedException("You are not the owner of this restaurant!");
+
+        restaurantRepository.deleteById(id);
     }
 
 }

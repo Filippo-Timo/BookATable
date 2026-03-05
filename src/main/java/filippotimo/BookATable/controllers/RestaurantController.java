@@ -1,0 +1,106 @@
+package filippotimo.BookATable.controllers;
+
+import filippotimo.BookATable.entities.GenericUser;
+import filippotimo.BookATable.entities.Restaurant;
+import filippotimo.BookATable.exceptions.ValidationException;
+import filippotimo.BookATable.payloads.restaurantDTOs.CreateRestaurantDTO;
+import filippotimo.BookATable.payloads.restaurantDTOs.UpdateRestaurantDTO;
+import filippotimo.BookATable.services.RestaurantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/restaurants")
+public class RestaurantController {
+
+    private final RestaurantService restaurantService;
+
+    @Autowired
+    public RestaurantController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
+
+    // 1. ---------- GET /api/restaurants ----------
+
+    @GetMapping
+    public List<Restaurant> findAll() {
+        return restaurantService.findAll();
+    }
+
+    // 2. ---------- GET /api/restaurants/{id} ----------
+
+    @GetMapping("/{id}")
+    public Restaurant findById(@PathVariable UUID id) {
+        return restaurantService.findById(id);
+    }
+
+    // 3. ---------- GET /api/restaurants/city/{city} ----------
+
+    @GetMapping("/city/{city}")
+    public List<Restaurant> findByCity(@PathVariable String city) {
+        return restaurantService.findByCity(city);
+    }
+
+    // 4. ---------- GET /api/restaurants/search?city=Roma&type=PIZZERIA ----------
+
+    @GetMapping("/search")
+    public List<Restaurant> findByCityAndType(@RequestParam String city,
+                                              @RequestParam String restaurantType) {
+        return restaurantService.findByCityAndType(city, restaurantType);
+    }
+
+    // 5. ---------- POST /api/restaurants ----------
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
+    public Restaurant create(@RequestBody @Validated CreateRestaurantDTO body,
+                             BindingResult validationResult,
+                             @AuthenticationPrincipal GenericUser currentUser) {
+        if (validationResult.hasErrors()) {
+            List<String> errorsList = validationResult.getFieldErrors()
+                    .stream()
+                    .map(fieldError -> fieldError.getDefaultMessage())
+                    .toList();
+            throw new ValidationException(errorsList);
+        }
+        return restaurantService.create(body, currentUser);
+    }
+
+    // 6. ---------- PUT /api/restaurants/{id} ----------
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
+    public Restaurant update(@PathVariable UUID id,
+                             @RequestBody @Validated UpdateRestaurantDTO body,
+                             BindingResult validationResult,
+                             @AuthenticationPrincipal GenericUser currentUser) {
+        if (validationResult.hasErrors()) {
+            List<String> errorsList = validationResult.getFieldErrors()
+                    .stream()
+                    .map(fieldError -> fieldError.getDefaultMessage())
+                    .toList();
+            throw new ValidationException(errorsList);
+        }
+        return restaurantService.update(id, body, currentUser);
+    }
+
+    // 7. ---------- DELETE /api/restaurants/{id} ----------
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
+    public void delete(@PathVariable UUID id,
+                       @AuthenticationPrincipal GenericUser currentUser) {
+        restaurantService.delete(id, currentUser);
+    }
+
+}
