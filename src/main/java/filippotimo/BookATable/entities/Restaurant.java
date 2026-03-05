@@ -38,7 +38,6 @@ public class Restaurant {
     public Restaurant(GenericUser owner,
                       String city,
                       RestaurantType restaurantType,
-                      Integer maxSeats,
                       String description,
                       Integer availableSeatsIndoor,
                       Integer availableSeatsOutdoor,
@@ -46,7 +45,7 @@ public class Restaurant {
         this.owner = owner;
         this.city = city;
         this.restaurantType = restaurantType;
-        this.maxSeats = maxSeats;
+        this.maxSeats = availableSeatsIndoor + availableSeatsOutdoor;
         this.description = description;
         this.availableSeatsIndoor = availableSeatsIndoor;
         this.availableSeatsOutdoor = availableSeatsOutdoor;

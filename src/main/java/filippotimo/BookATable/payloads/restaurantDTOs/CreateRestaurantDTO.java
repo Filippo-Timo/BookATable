@@ -9,9 +9,6 @@ public record CreateRestaurantDTO(
         String city,
         @NotNull(message = "Restaurant type is required")
         RestaurantType restaurantType,
-        @NotNull(message = "Max seats is required")
-        @Min(value = 1, message = "Max seats must be at least 1")
-        Integer maxSeats,
         @Size(max = 500, message = "Description cannot exceed 500 characters")
         String description,
         @NotNull(message = "Available seats indoor is required")
