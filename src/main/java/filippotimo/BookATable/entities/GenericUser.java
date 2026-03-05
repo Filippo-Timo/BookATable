@@ -45,13 +45,14 @@ public class GenericUser implements UserDetails {
                        String password,
                        String firstName,
                        String lastName,
+                       Role role,
                        LocalDate birthDate,
-                       String city,
-                       String avatar) {
+                       String city) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
         this.birthDate = birthDate;
         this.city = city;
     }
