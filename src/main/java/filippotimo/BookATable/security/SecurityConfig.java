@@ -38,11 +38,15 @@ public class SecurityConfig {
         // TODO: 4) DISABILITO LA PROTEZIONE SU TUTTI GLI ENDPOINT
 
         httpSecurity.authorizeHttpRequests(req -> req
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/**", // /api/auth
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
+                        ).permitAll()
+                // .anyRequest().authenticated()  // ← autenticazione richiesta ovunque
         );
-
         // TODO: 5) AGGIUNGO IL FILTRO JWT
         httpSecurity.addFilterBefore(jwtCheckerFilter,
                 UsernamePasswordAuthenticationFilter.class);
