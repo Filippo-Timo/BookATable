@@ -12,6 +12,7 @@ import filippotimo.BookATable.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,10 +32,23 @@ public class ReservationService {
 
     public Reservation create(CreateReservationDTO body, GenericUser currentUser) {
 
-        // 1) Controllo che il ristorante esista
+        // 1) Controllo che la data della prenotazione non sia al passato
+        if (body.date().isBefore(LocalDate.now()))
+            throw new RuntimeException("Date must be today or in the future!");
+
+        // 2) Controllo che il ristorante esista
         Restaurant restaurant = restaurantService.findById(body.restaurantId());
 
-        // 2) Calcolo i posti già prenotati per quel giorno e quella preferenza
+        // Controllo che l'utente non abbia già una prenotazione nello stesso ristorante, stessa data e stessa ora
+        boolean alreadyBooked = reservationRepository
+                .findByRestaurantIdAndDate(restaurant.getId(), body.date())
+                .stream()
+                .anyMatch(r -> r.getUser().getId().equals(currentUser.getId()));
+
+        if (alreadyBooked)
+            throw new RuntimeException("You already have a reservation at this restaurant on this date!");
+
+        // 3) Calcolo i posti già prenotati per quel giorno e quella preferenza
         List<Reservation> reservationsToday = reservationRepository
                 .findByRestaurantIdAndDate(restaurant.getId(), body.date());
 
@@ -43,7 +57,7 @@ public class ReservationService {
                 .mapToInt(Reservation::getSeatsBooked)
                 .sum();
 
-        // 3) Controllo disponibilità posti
+        // 4) Controllo disponibilità posti
         int availableSeats = body.seatingPreference() == SeatingPreference.INDOOR ?
                 restaurant.getAvailableSeatsIndoor() : restaurant.getAvailableSeatsOutdoor();
 
@@ -52,7 +66,7 @@ public class ReservationService {
                     + body.seatingPreference().name().toLowerCase()
                     + " seats available for this date!");
 
-        // 4) Creo e salvo la prenotazione
+        // 5) Creo e salvo la prenotazione
         Reservation reservation = new Reservation(
                 currentUser,
                 restaurant,
@@ -91,8 +105,22 @@ public class ReservationService {
         if (!reservation.getUser().getId().equals(currentUser.getId()))
             throw new UnauthorizedException("You are not the owner of this reservation!");
 
+        // Controllo che la data inserita non sia al passato
+        if (body.date().isBefore(LocalDate.now()))
+            throw new RuntimeException("Date must be today or in the future!");
+
         // Ricalcolo disponibilità escludendo la prenotazione corrente
         Restaurant restaurant = reservation.getRestaurant();
+
+        // Controllo duplicati — escludo la prenotazione corrente
+        boolean alreadyBooked = reservationRepository
+                .findByRestaurantIdAndDate(restaurant.getId(), body.date())
+                .stream()
+                .anyMatch(r -> r.getUser().getId().equals(currentUser.getId())
+                        && !r.getId().equals(id));  // ← escludo la prenotazione corrente
+
+        if (alreadyBooked)
+            throw new RuntimeException("You already have a reservation at this restaurant on this date!");
 
         List<Reservation> reservationsToday = reservationRepository
                 .findByRestaurantIdAndDate(restaurant.getId(), body.date());
@@ -132,5 +160,5 @@ public class ReservationService {
 
         reservationRepository.deleteById(id);
     }
-    
+
 }

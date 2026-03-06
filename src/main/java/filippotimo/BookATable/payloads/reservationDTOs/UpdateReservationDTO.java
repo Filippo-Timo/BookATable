@@ -1,7 +1,6 @@
 package filippotimo.BookATable.payloads.reservationDTOs;
 
 import filippotimo.BookATable.entities.enums.SeatingPreference;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +10,6 @@ import java.time.LocalTime;
 
 public record UpdateReservationDTO(
         @NotNull(message = "Date is required")
-        @Future(message = "Date must be in the future")
         LocalDate date,
 
         @NotNull(message = "Time is required")
