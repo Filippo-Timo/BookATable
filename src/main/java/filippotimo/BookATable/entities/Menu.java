@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import filippotimo.BookATable.entities.enums.MenuType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +25,10 @@ public class Menu {
 
     @Enumerated(EnumType.STRING)
     private MenuType menuType;
+
+    @OneToMany(mappedBy = "menu")
+    @JsonIgnoreProperties("menu")
+    private List<Dish> dishes = new ArrayList<>();
 
 
     public Menu() {
@@ -53,6 +59,14 @@ public class Menu {
 
     public void setMenuType(MenuType menuType) {
         this.menuType = menuType;
+    }
+
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
 
     @Override
