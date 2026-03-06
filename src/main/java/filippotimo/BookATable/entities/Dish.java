@@ -3,6 +3,7 @@ package filippotimo.BookATable.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +25,7 @@ public class Dish {
 
     private String ingredients;
 
-    private Double price;
+    private BigDecimal price;
 
 
     public Dish() {
@@ -33,7 +34,7 @@ public class Dish {
     public Dish(Menu menu,
                 String name,
                 String ingredients,
-                Double price) {
+                BigDecimal price) {
         this.menu = menu;
         this.name = name;
         this.ingredients = ingredients;
@@ -69,11 +70,11 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
