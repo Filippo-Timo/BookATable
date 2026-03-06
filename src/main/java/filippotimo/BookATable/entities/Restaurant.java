@@ -17,6 +17,8 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private GenericUser owner;
@@ -36,6 +38,7 @@ public class Restaurant {
     }
 
     public Restaurant(GenericUser owner,
+                      String name,
                       String city,
                       RestaurantType restaurantType,
                       String description,
@@ -43,6 +46,7 @@ public class Restaurant {
                       Integer availableSeatsOutdoor,
                       String phone) {
         this.owner = owner;
+        this.name = name;
         this.city = city;
         this.restaurantType = restaurantType;
         this.maxSeats = availableSeatsIndoor + availableSeatsOutdoor;
@@ -62,6 +66,14 @@ public class Restaurant {
 
     public void setOwner(GenericUser owner) {
         this.owner = owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCity() {

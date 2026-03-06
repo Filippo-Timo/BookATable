@@ -3,19 +3,14 @@ package filippotimo.BookATable.payloads.menuDTOs;
 import filippotimo.BookATable.entities.enums.MenuType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-import java.util.UUID;
 
 public record CreateMenuDTO(
-        @NotNull(message = "Restaurant ID is required")
-        UUID restaurantId,
+
+        @NotBlank(message = "Restaurant name is required")
+        String restaurantName,
 
         @NotNull(message = "Menu type is required")
-        MenuType menuType,
+        MenuType menuType
 
-        @NotBlank(message = "Name is required")
-        @Size(max = 100, message = "Name cannot exceed 100 characters")
-        String name
 ) {
 }

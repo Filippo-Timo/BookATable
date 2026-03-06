@@ -4,6 +4,11 @@ import filippotimo.BookATable.entities.enums.RestaurantType;
 import jakarta.validation.constraints.*;
 
 public record UpdateRestaurantDTO(
+        
+        @NotBlank(message = "Name is required")
+        @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+        String name,
+
         @NotBlank(message = "City is required")
         @Size(min = 2, max = 30, message = "City must contain between 2 and 30 characters")
         String city,

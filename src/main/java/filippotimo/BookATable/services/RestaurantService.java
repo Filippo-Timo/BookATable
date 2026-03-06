@@ -39,6 +39,7 @@ public class RestaurantService {
 
         Restaurant restaurant = new Restaurant(
                 currentUser,
+                body.name(),
                 body.city(),
                 body.restaurantType(),
                 body.description(),
@@ -87,6 +88,7 @@ public class RestaurantService {
         if (!restaurant.getOwner().getId().equals(currentUser.getId()))
             throw new UnauthorizedException("You are not the owner of this restaurant!");
 
+        restaurant.setName(body.name());
         restaurant.setCity(body.city());
         restaurant.setRestaurantType(body.restaurantType());
         restaurant.setDescription(body.description());
