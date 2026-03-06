@@ -2,6 +2,7 @@ package filippotimo.BookATable.services;
 
 import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.enums.Role;
+import filippotimo.BookATable.exceptions.BadRequestException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.payloads.userDTOs.RegisterRestaurantOwnerDTO;
 import filippotimo.BookATable.payloads.userDTOs.RegisterUserDTO;
@@ -27,7 +28,7 @@ public class GenericUserService {
 
         // 1) Controllo duplicati
         if (userRepository.existsByEmail(body.email()))
-            throw new RuntimeException("Email " + body.email() + " already in use!");
+            throw new BadRequestException("Email " + body.email() + " already in use!");
 
         // 2) Creo e salvo l'utente
         GenericUser user = new GenericUser(
@@ -51,7 +52,7 @@ public class GenericUserService {
 
         // 1) Controllo duplicati
         if (userRepository.existsByEmail(body.email()))
-            throw new RuntimeException("Email " + body.email() + " already in use!");
+            throw new BadRequestException("Email " + body.email() + " already in use!");
 
         // 2) Creo e salvo il ristoratore
         GenericUser owner = new GenericUser(
@@ -78,5 +79,6 @@ public class GenericUserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found!"));
     }
+
 
 }

@@ -3,6 +3,7 @@ package filippotimo.BookATable.services;
 import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.Restaurant;
 import filippotimo.BookATable.entities.Review;
+import filippotimo.BookATable.exceptions.BadRequestException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.reviewDTOs.CreateReviewDTO;
@@ -33,7 +34,7 @@ public class ReviewService {
 
         // 2) Controllo che l'utente non abbia già recensito questo ristorante
         if (reviewRepository.existsByUserIdAndRestaurantId(currentUser.getId(), restaurantId))
-            throw new RuntimeException("You have already reviewed this restaurant!");
+            throw new BadRequestException("You have already reviewed this restaurant!");
 
         // 3) Creo e salvo la recensione
         Review review = new Review(

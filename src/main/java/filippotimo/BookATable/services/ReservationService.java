@@ -4,6 +4,7 @@ import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.Reservation;
 import filippotimo.BookATable.entities.Restaurant;
 import filippotimo.BookATable.entities.enums.SeatingPreference;
+import filippotimo.BookATable.exceptions.BadRequestException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.reservationDTOs.CreateReservationDTO;
@@ -34,7 +35,7 @@ public class ReservationService {
 
         // 1) Controllo che la data della prenotazione non sia al passato
         if (body.date().isBefore(LocalDate.now()))
-            throw new RuntimeException("Date must be today or in the future!");
+            throw new BadRequestException("Date must be today or in the future!");
 
         // 2) Controllo che il ristorante esista
         Restaurant restaurant = restaurantService.findById(body.restaurantId());
@@ -46,7 +47,7 @@ public class ReservationService {
                 .anyMatch(r -> r.getUser().getId().equals(currentUser.getId()));
 
         if (alreadyBooked)
-            throw new RuntimeException("You already have a reservation at this restaurant on this date!");
+            throw new BadRequestException("You already have a reservation at this restaurant on this date!");
 
         // 3) Calcolo i posti già prenotati per quel giorno e quella preferenza
         List<Reservation> reservationsToday = reservationRepository
@@ -62,7 +63,7 @@ public class ReservationService {
                 restaurant.getAvailableSeatsIndoor() : restaurant.getAvailableSeatsOutdoor();
 
         if (seatsBookedToday + body.seatsBooked() > availableSeats)
-            throw new RuntimeException("Not enough "
+            throw new BadRequestException("Not enough "
                     + body.seatingPreference().name().toLowerCase()
                     + " seats available for this date!");
 
@@ -107,7 +108,7 @@ public class ReservationService {
 
         // Controllo che la data inserita non sia al passato
         if (body.date().isBefore(LocalDate.now()))
-            throw new RuntimeException("Date must be today or in the future!");
+            throw new BadRequestException("Date must be today or in the future!");
 
         // Ricalcolo disponibilità escludendo la prenotazione corrente
         Restaurant restaurant = reservation.getRestaurant();
@@ -120,7 +121,7 @@ public class ReservationService {
                         && !r.getId().equals(id));  // ← escludo la prenotazione corrente
 
         if (alreadyBooked)
-            throw new RuntimeException("You already have a reservation at this restaurant on this date!");
+            throw new BadRequestException("You already have a reservation at this restaurant on this date!");
 
         List<Reservation> reservationsToday = reservationRepository
                 .findByRestaurantIdAndDate(restaurant.getId(), body.date());
@@ -136,7 +137,7 @@ public class ReservationService {
                 : restaurant.getAvailableSeatsOutdoor();
 
         if (seatsBookedToday + body.seatsBooked() > availableSeats)
-            throw new RuntimeException("Not enough "
+            throw new BadRequestException("Not enough "
                     + body.seatingPreference().name().toLowerCase()
                     + " seats available for this date!");
 
@@ -152,9 +153,9 @@ public class ReservationService {
 
     public void delete(UUID id, GenericUser currentUser) {
 
+        // Controllo che la prenotazione appartenga all'utente loggato
         Reservation reservation = findById(id);
 
-        // Controllo che la prenotazione appartenga all'utente loggato
         if (!reservation.getUser().getId().equals(currentUser.getId()))
             throw new UnauthorizedException("You are not the owner of this reservation!");
 
