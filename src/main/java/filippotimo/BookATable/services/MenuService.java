@@ -8,7 +8,6 @@ import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.menuDTOs.CreateMenuDTO;
 import filippotimo.BookATable.payloads.menuDTOs.UpdateMenuDTO;
 import filippotimo.BookATable.repositories.MenuRepository;
-import filippotimo.BookATable.repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +19,11 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final RestaurantService restaurantService;
-    private final RestaurantRepository restaurantRepository;
 
     @Autowired
-    public MenuService(MenuRepository menuRepository, RestaurantService restaurantService, RestaurantRepository restaurantRepository) {
+    public MenuService(MenuRepository menuRepository, RestaurantService restaurantService) {
         this.menuRepository = menuRepository;
         this.restaurantService = restaurantService;
-        this.restaurantRepository = restaurantRepository;
     }
 
 
@@ -34,12 +31,14 @@ public class MenuService {
 
     public Menu create(CreateMenuDTO body, UUID currentUserId) {
 
-        // 1) Cerco il ristorante per nome verificando che appartenga all'utente loggato
-        Restaurant restaurant = restaurantRepository
-                .findByNameIgnoreCaseAndOwnerId(body.restaurantName(), currentUserId) // ← currentUserId invece di currentUser.getId()
-                .orElseThrow(() -> new NotFoundException("Restaurant '" + body.restaurantName() + "' not found or you are not the owner!"));
+        // 1) Controllo che il ristorante esista
+        Restaurant restaurant = restaurantService.findById(body.restaurantId());
 
-        // 2) Controllo che non esista già un menu dello stesso tipo per questo ristorante
+        // 2) Controllo che il ristorante appartenga all'utente loggato
+        if (!restaurant.getOwner().getId().equals(currentUserId))
+            throw new UnauthorizedException("You are not the owner of this restaurant!");
+
+        // 3) Controllo che non esista già un menu dello stesso tipo per questo ristorante
         boolean menuTypeExists = menuRepository.findByRestaurantId(restaurant.getId())
                 .stream()
                 .anyMatch(m -> m.getMenuType() == body.menuType());
@@ -47,7 +46,7 @@ public class MenuService {
         if (menuTypeExists)
             throw new BadRequestException("A menu of type " + body.menuType().name() + " already exists for this restaurant!");
 
-        // 3) Creo e salvo il menu
+        // 4) Creo e salvo il menu
         Menu menu = new Menu(restaurant, body.menuType());
 
         return menuRepository.save(menu);
