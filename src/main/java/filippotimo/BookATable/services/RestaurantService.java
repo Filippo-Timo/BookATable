@@ -4,6 +4,7 @@ import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.Restaurant;
 import filippotimo.BookATable.entities.enums.RestaurantType;
 import filippotimo.BookATable.entities.enums.Role;
+import filippotimo.BookATable.exceptions.BadRequestException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.restaurantDTOs.CreateRestaurantDTO;
@@ -36,6 +37,10 @@ public class RestaurantService {
         // Controllo che l'utente sia un RESTAURANT_OWNER
         if (currentUser.getRole() != Role.RESTAURANT_OWNER)
             throw new UnauthorizedException("Only restaurant owners can create a restaurant!");
+
+        // Controllo duplicati
+        if (restaurantRepository.findByNameIgnoreCaseAndOwnerId(body.name(), currentUser.getId()).isPresent())
+            throw new BadRequestException("You already have a restaurant with this name!");
 
         Restaurant restaurant = new Restaurant(
                 currentUser,
@@ -87,6 +92,13 @@ public class RestaurantService {
         // Controllo che il ristorante appartenga all'utente loggato
         if (!restaurant.getOwner().getId().equals(currentUser.getId()))
             throw new UnauthorizedException("You are not the owner of this restaurant!");
+
+        // Controllo duplicati — escludo il ristorante corrente
+        restaurantRepository.findByNameIgnoreCaseAndOwnerId(body.name(), currentUser.getId())
+                .ifPresent(r -> {
+                    if (!r.getId().equals(id))
+                        throw new BadRequestException("You already have a restaurant with this name!");
+                });
 
         restaurant.setName(body.name());
         restaurant.setCity(body.city());
