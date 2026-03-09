@@ -46,6 +46,7 @@ public class RestaurantService {
                 currentUser,
                 body.name(),
                 body.city(),
+                body.address(),
                 body.restaurantType(),
                 body.description(),
                 body.availableSeatsIndoor(),
@@ -102,6 +103,7 @@ public class RestaurantService {
 
         restaurant.setName(body.name());
         restaurant.setCity(body.city());
+        restaurant.setAddress(body.address());
         restaurant.setRestaurantType(body.restaurantType());
         restaurant.setDescription(body.description());
         restaurant.setAvailableSeatsIndoor(body.availableSeatsIndoor());

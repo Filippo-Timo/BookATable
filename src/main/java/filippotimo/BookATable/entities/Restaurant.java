@@ -25,6 +25,8 @@ public class Restaurant {
 
     private String city;
 
+    private String address;
+
     @Enumerated(EnumType.STRING)
     private RestaurantType restaurantType;
 
@@ -40,6 +42,7 @@ public class Restaurant {
     public Restaurant(GenericUser owner,
                       String name,
                       String city,
+                      String address,
                       RestaurantType restaurantType,
                       String description,
                       Integer availableSeatsIndoor,
@@ -48,6 +51,7 @@ public class Restaurant {
         this.owner = owner;
         this.name = name;
         this.city = city;
+        this.address = address;
         this.restaurantType = restaurantType;
         this.maxSeats = availableSeatsIndoor + availableSeatsOutdoor;
         this.description = description;
@@ -82,6 +86,14 @@ public class Restaurant {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public RestaurantType getRestaurantType() {
