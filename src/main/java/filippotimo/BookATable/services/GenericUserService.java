@@ -9,6 +9,7 @@ import filippotimo.BookATable.exceptions.NotEmptyException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.payloads.userDTOs.RegisterRestaurantOwnerDTO;
 import filippotimo.BookATable.payloads.userDTOs.RegisterUserDTO;
+import filippotimo.BookATable.payloads.userDTOs.UpdateUserDTO;
 import filippotimo.BookATable.repositories.GenericUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,6 +90,28 @@ public class GenericUserService {
     public GenericUser findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found!"));
+    }
+
+
+    // ---------- UPDATE ----------
+
+    public GenericUser update(UUID id, UpdateUserDTO body) {
+
+        GenericUser user = findById(id);
+
+        user.setFirstName(body.firstName());
+        user.setLastName(body.lastName());
+        user.setCity(body.city());
+        user.setBirthDate(body.birthDate());
+
+        return userRepository.save(user);
+    }
+
+// ---------- DELETE ----------
+
+    public void delete(UUID id) {
+        findById(id);
+        userRepository.deleteById(id);
     }
 
 
