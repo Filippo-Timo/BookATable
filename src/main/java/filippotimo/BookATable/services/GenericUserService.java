@@ -1,8 +1,11 @@
 package filippotimo.BookATable.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.enums.Role;
 import filippotimo.BookATable.exceptions.BadRequestException;
+import filippotimo.BookATable.exceptions.NotEmptyException;
 import filippotimo.BookATable.exceptions.NotFoundException;
 import filippotimo.BookATable.payloads.userDTOs.RegisterRestaurantOwnerDTO;
 import filippotimo.BookATable.payloads.userDTOs.RegisterUserDTO;
@@ -10,17 +13,25 @@ import filippotimo.BookATable.repositories.GenericUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class GenericUserService {
 
-    @Autowired
+    private final Cloudinary cloudinaryUploader;
     private GenericUserRepository userRepository;
+    private PasswordEncoder bcrypt;
 
     @Autowired
-    private PasswordEncoder bcrypt;
+    public GenericUserService(GenericUserRepository userRepository, PasswordEncoder bcrypt, Cloudinary cloudinaryUploader) {
+        this.userRepository = userRepository;
+        this.bcrypt = bcrypt;
+        this.cloudinaryUploader = cloudinaryUploader;
+    }
 
     // ---------- REGISTRAZIONE USER ----------
 
@@ -78,6 +89,29 @@ public class GenericUserService {
     public GenericUser findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found!"));
+    }
+
+
+    // ---------- CLOUDINARY ----------
+
+    public GenericUser findByIdAndUploadAvatar(UUID userId, MultipartFile file) {
+
+        if (file.isEmpty()) throw new NotEmptyException();
+
+        GenericUser found = this.findById(userId);
+
+        try {
+            Map result = cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            String imageUrl = (String) result.get("secure_url");
+
+            found.setAvatar(imageUrl);
+
+            return userRepository.save(found);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
