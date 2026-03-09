@@ -5,6 +5,7 @@ import filippotimo.BookATable.exceptions.ValidationException;
 import filippotimo.BookATable.payloads.userDTOs.UpdateUserDTO;
 import filippotimo.BookATable.services.GenericUserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class GenericUserController {
 
-    
+
     private final GenericUserService genericUserService;
 
     public GenericUserController(GenericUserService genericUserService) {
@@ -51,8 +52,9 @@ public class GenericUserController {
 
 
     // 3. ---------- PATCH /api/users/me/avatar ----------
+    // consumes = MediaType. ... ---> serve per permettere di caricare un file su Swagger (in questo caso un'immagine per l'avatar)
 
-    @PatchMapping("/me/avatar")
+    @PatchMapping(value = "/me/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public GenericUser uploadAvatar(@RequestParam("avatar") MultipartFile file,
                                     @AuthenticationPrincipal GenericUser currentUser) {
         return genericUserService.findByIdAndUploadAvatar(currentUser.getId(), file);
