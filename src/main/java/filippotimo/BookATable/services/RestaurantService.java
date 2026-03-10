@@ -106,6 +106,7 @@ public class RestaurantService {
         restaurant.setAddress(body.address());
         restaurant.setRestaurantType(body.restaurantType());
         restaurant.setDescription(body.description());
+        restaurant.setMaxSeats(body.availableSeatsIndoor() + body.availableSeatsOutdoor());
         restaurant.setAvailableSeatsIndoor(body.availableSeatsIndoor());
         restaurant.setAvailableSeatsOutdoor(body.availableSeatsOutdoor());
         restaurant.setPhone(body.phone());

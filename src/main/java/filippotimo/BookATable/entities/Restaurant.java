@@ -1,9 +1,12 @@
 package filippotimo.BookATable.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import filippotimo.BookATable.entities.enums.RestaurantType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,6 +38,22 @@ public class Restaurant {
     private Integer availableSeatsIndoor;
     private Integer availableSeatsOutdoor;
     private String phone;
+
+    // Queste tre relazioni qui sotto servono per fare in modo che eliminando un ristorante
+    // vengano eliminati anche i menù, le recensioni e le prenotazioni collegati a quel ristorante
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Reservation> reservations = new ArrayList<>();
+    
 
     public Restaurant() {
     }

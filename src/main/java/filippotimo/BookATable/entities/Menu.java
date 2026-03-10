@@ -26,7 +26,7 @@ public class Menu {
     @Enumerated(EnumType.STRING)
     private MenuType menuType;
 
-    @OneToMany(mappedBy = "menu")
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("menu")
     private List<Dish> dishes = new ArrayList<>();
 

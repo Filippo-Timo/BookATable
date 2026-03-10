@@ -9,7 +9,7 @@ public record UpdateReviewDTO(
         Integer rating,
 
         @NotBlank(message = "Comment is required")
-        @Size(min = 10, max = 1000, message = "Comment must be between 10 and 1000 characters")
+        @Size(min = 10, max = 500, message = "Comment must be between 10 and 1000 characters")
         String comment
 ) {
 }

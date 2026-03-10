@@ -9,6 +9,7 @@ import filippotimo.BookATable.exceptions.UnauthorizedException;
 import filippotimo.BookATable.payloads.reviewDTOs.CreateReviewDTO;
 import filippotimo.BookATable.payloads.reviewDTOs.UpdateReviewDTO;
 import filippotimo.BookATable.repositories.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final RestaurantService restaurantService;
 
+    @Autowired
     public ReviewService(ReviewRepository reviewRepository, RestaurantService restaurantService) {
         this.reviewRepository = reviewRepository;
         this.restaurantService = restaurantService;
