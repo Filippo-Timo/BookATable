@@ -10,6 +10,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +32,14 @@ public class SecurityConfig {
 
         httpSecurity.csrf(csrf -> csrf.disable());
 
-        // TODO: 3) CAMBIO IL MECCANISMO A SESSIONI
+        // TODO: 3) ABILITO IL CORS
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        // TODO: 4) CAMBIO IL MECCANISMO A SESSIONI
 
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // TODO: 4) DISABILITO LA PROTEZIONE SU TUTTI GLI ENDPOINT
+        // TODO: 5) DISABILITO LA PROTEZIONE SU TUTTI GLI ENDPOINT
 
         httpSecurity.authorizeHttpRequests(req -> req
                 .requestMatchers(
@@ -43,15 +51,16 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()  // ← autenticazione richiesta ovunque
         );
-        // TODO: 5) AGGIUNGO IL FILTRO JWT
+        // TODO: 6) AGGIUNGO IL FILTRO JWT
         httpSecurity.addFilterBefore(jwtCheckerFilter,
                 UsernamePasswordAuthenticationFilter.class);
 
-        // TODO: 6) INFINE CREO L'OGGETTO CHE SERVE A SPRING SECURITY PER APPLICARE QUESTE IMPOSTAZIONI
+        // TODO: 7) INFINE CREO L'OGGETTO CHE SERVE A SPRING SECURITY PER APPLICARE QUESTE IMPOSTAZIONI
 
         return httpSecurity.build();
 
     }
+
 
     // ******************************** Bcrypt ********************************
 //  Tramite questo @Bean configuro BCrypt per la protezione delle password
@@ -61,5 +70,20 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(13);
     }
 
+
+    // ******************************** Cors ********************************
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
 }
