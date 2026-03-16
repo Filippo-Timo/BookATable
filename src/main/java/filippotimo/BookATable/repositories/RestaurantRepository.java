@@ -12,14 +12,19 @@ import java.util.UUID;
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
+    // Trova tutti i ristoranti per città (case insensitive)
     List<Restaurant> findByCityIgnoreCase(String city);
 
+    // Trova tutti i ristoranti per città e tipo (case insensitive)
     List<Restaurant> findByCityIgnoreCaseAndRestaurantType(
             String city,
             RestaurantType restaurantType
     );
 
+    // Controlla se esiste già un ristorante con lo stesso nome per lo stesso owner
     Optional<Restaurant> findByNameIgnoreCaseAndOwnerId(String name, UUID ownerId);
 
+    // Trova tutti i ristoranti di un owner
+    List<Restaurant> findByOwnerId(UUID ownerId);
 
 }

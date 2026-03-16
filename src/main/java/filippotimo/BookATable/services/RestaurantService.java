@@ -92,6 +92,11 @@ public class RestaurantService {
         );
     }
 
+    // Trova tutti i ristoranti dell'owner loggato
+    public List<Restaurant> findByOwner(GenericUser currentUser) {
+        return restaurantRepository.findByOwnerId(currentUser.getId());
+    }
+
     // ---------- UPDATE ----------
 
     public Restaurant update(UUID id, UpdateRestaurantDTO body, GenericUser currentUser) {
