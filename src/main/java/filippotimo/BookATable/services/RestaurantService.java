@@ -1,5 +1,7 @@
 package filippotimo.BookATable.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.entities.Restaurant;
 import filippotimo.BookATable.entities.enums.RestaurantType;
@@ -16,18 +18,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final Cloudinary cloudinary;
 
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository, Cloudinary cloudinary) {
         this.restaurantRepository = restaurantRepository;
+        this.cloudinary = cloudinary;
     }
 
     // ---------- CREATE ----------
@@ -45,6 +52,7 @@ public class RestaurantService {
         Restaurant restaurant = new Restaurant(
                 currentUser,
                 body.name(),
+                "https://placehold.co/400x200?text=Ristorante",
                 body.city(),
                 body.address(),
                 body.restaurantType(),
@@ -110,6 +118,26 @@ public class RestaurantService {
         restaurant.setAvailableSeatsIndoor(body.availableSeatsIndoor());
         restaurant.setAvailableSeatsOutdoor(body.availableSeatsOutdoor());
         restaurant.setPhone(body.phone());
+
+        return restaurantRepository.save(restaurant);
+    }
+
+    // ---------- UPLOAD IMAGE ----------
+
+    public Restaurant uploadImage(UUID id, MultipartFile image, GenericUser currentUser) throws IOException {
+
+        Restaurant restaurant = findById(id);
+
+        // Controllo che il ristorante appartenga all'utente loggato
+        if (!restaurant.getOwner().getId().equals(currentUser.getId()))
+            throw new UnauthorizedException("You are not the owner of this restaurant!");
+
+        // Upload immagine su Cloudinary
+        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+        String imageUrl = (String) uploadResult.get("url");
+
+        // Salvo l'URL dell'immagine nel ristorante
+        restaurant.setImageUrl(imageUrl);
 
         return restaurantRepository.save(restaurant);
     }

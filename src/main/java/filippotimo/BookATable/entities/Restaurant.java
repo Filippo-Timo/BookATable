@@ -22,6 +22,8 @@ public class Restaurant {
 
     private String name;
 
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private GenericUser owner;
@@ -53,13 +55,14 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
-    
+
 
     public Restaurant() {
     }
 
     public Restaurant(GenericUser owner,
                       String name,
+                      String imageUrl,
                       String city,
                       String address,
                       RestaurantType restaurantType,
@@ -69,6 +72,7 @@ public class Restaurant {
                       String phone) {
         this.owner = owner;
         this.name = name;
+        this.imageUrl = imageUrl;
         this.city = city;
         this.address = address;
         this.restaurantType = restaurantType;
@@ -97,6 +101,14 @@ public class Restaurant {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCity() {
@@ -164,19 +176,40 @@ public class Restaurant {
     }
 
 
+//    @Override
+//    public String toString() {
+//        return "Restaurant { " +
+//                "id = " + id +
+//                ", owner = " + owner +
+//                ", city = " + city + '\'' +
+//                ", restaurantType = " + restaurantType +
+//                ", maxSeats = " + maxSeats +
+//                ", description = " + description + '\'' +
+//                ", availableSeatsIndoor = " + availableSeatsIndoor +
+//                ", availableSeatsOutdoor = " + availableSeatsOutdoor +
+//                ", phone = " + phone +
+//                " " +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "Restaurant { " +
+        return "Restaurant{" +
                 "id = " + id +
+                ", name = " + name + '\'' +
+                ", imageUrl = " + imageUrl + '\'' +
                 ", owner = " + owner +
                 ", city = " + city + '\'' +
+                ", address = " + address + '\'' +
                 ", restaurantType = " + restaurantType +
                 ", maxSeats = " + maxSeats +
                 ", description = " + description + '\'' +
                 ", availableSeatsIndoor = " + availableSeatsIndoor +
                 ", availableSeatsOutdoor = " + availableSeatsOutdoor +
-                ", phone = " + phone +
-                " " +
+                ", phone = " + phone + '\'' +
+                ", menus = " + menus +
+                ", reviews = " + reviews +
+                ", reservations = " + reservations +
                 '}';
     }
 }

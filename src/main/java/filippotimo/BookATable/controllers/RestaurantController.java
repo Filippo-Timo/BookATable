@@ -9,12 +9,15 @@ import filippotimo.BookATable.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,7 +101,17 @@ public class RestaurantController {
         return restaurantService.update(id, body, currentUser);
     }
 
-    // 7. ---------- DELETE /api/restaurants/{id} ----------
+    // 7. ---------- PATCH /api/restaurants/{id}/image ----------
+
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('RESTAURANT_OWNER')")
+    public Restaurant uploadImage(@PathVariable UUID id,
+                                  @RequestParam("image") MultipartFile image,
+                                  @AuthenticationPrincipal GenericUser currentUser) throws IOException {
+        return restaurantService.uploadImage(id, image, currentUser);
+    }
+
+    // 8. ---------- DELETE /api/restaurants/{id} ----------
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
