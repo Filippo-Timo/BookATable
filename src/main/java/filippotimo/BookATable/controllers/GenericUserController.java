@@ -4,6 +4,7 @@ import filippotimo.BookATable.entities.GenericUser;
 import filippotimo.BookATable.exceptions.ValidationException;
 import filippotimo.BookATable.payloads.userDTOs.UpdateUserDTO;
 import filippotimo.BookATable.services.GenericUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,7 @@ public class GenericUserController {
 
     private final GenericUserService genericUserService;
 
+    @Autowired
     public GenericUserController(GenericUserService genericUserService) {
         this.genericUserService = genericUserService;
     }

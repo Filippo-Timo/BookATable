@@ -51,8 +51,9 @@ public class ReservationController {
     // 3. ---------- GET /api/reservations/{id} ----------
 
     @GetMapping("/{id}")
-    public Reservation findById(@PathVariable UUID id) {
-        return reservationService.findById(id);
+    public Reservation findById(@PathVariable UUID id,
+                                @AuthenticationPrincipal GenericUser currentUser) {
+        return reservationService.findByIdAndCheckAuthorization(id, currentUser);
     }
 
 

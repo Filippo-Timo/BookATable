@@ -96,6 +96,18 @@ public class ReservationService {
                 .orElseThrow(() -> new NotFoundException("Reservation with id " + id + " not found!"));
     }
 
+    public Reservation findByIdAndCheckAuthorization(UUID id, GenericUser currentUser) {
+        Reservation reservation = findById(id); // ← richiama quello sopra
+
+        boolean isUser = reservation.getUser().getId().equals(currentUser.getId());
+        boolean isOwner = reservation.getRestaurant().getOwner().getId().equals(currentUser.getId());
+
+        if (!isUser && !isOwner)
+            throw new UnauthorizedException("You are not authorized to view this reservation!");
+
+        return reservation;
+    }
+
     // ---------- UPDATE ----------
 
     public Reservation update(UUID id, UpdateReservationDTO body, GenericUser currentUser) {
