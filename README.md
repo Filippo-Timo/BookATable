@@ -4,6 +4,10 @@ REST API for restaurant table booking, built with Spring Boot
 
 ---
 
+## Frontend
+
+https://github.com/Filippo-Timo/BookATable-Frontend
+
 ## Descrizione
 
 BookATable è una REST API fullstack per la prenotazione di tavoli nei ristoranti.  
@@ -19,8 +23,9 @@ I ristoratori possono registrarsi, gestire il proprio ristorante e visualizzare 
 
 - Registrazione e login con autenticazione JWT
 - Visualizzazione ristoranti nella propria città
-- Ricerca ristoranti per città e tipologia
-- Prenotazione tavolo (data, orario, numero coperti, preferenza interno/esterno)
+- Ricerca ristoranti per città, tipologia e nome
+- Prenotazione tavolo (data, orario, numero coperti, preferenza interno/esterno) con annesso meteo per la data della
+  prenotazione
 - Gestione prenotazioni (visualizza, cancella)
 - Scrittura recensioni con valutazione
 
