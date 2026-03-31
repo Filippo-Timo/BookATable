@@ -33,14 +33,16 @@ public class RestaurantController {
     }
 
     // 1. ---------- GET /api/restaurants ----------
+    // Il parametro restaurantType è opzionale — se non viene passato restituisce tutti i ristoranti
 
     @GetMapping
     public Page<Restaurant> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "city") String orderBy,
-            @RequestParam(defaultValue = "asc") String sortCriteria) {
-        return restaurantService.findAll(page, size, orderBy, sortCriteria);
+            @RequestParam(defaultValue = "asc") String sortCriteria,
+            @RequestParam(required = false) String restaurantType) {
+        return restaurantService.findAll(page, size, orderBy, sortCriteria, restaurantType);
     }
 
     // 2. ---------- GET /api/restaurants/my ----------

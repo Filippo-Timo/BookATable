@@ -2,6 +2,8 @@ package filippotimo.BookATable.repositories;
 
 import filippotimo.BookATable.entities.Restaurant;
 import filippotimo.BookATable.entities.enums.RestaurantType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +28,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
     // Trova tutti i ristoranti di un owner
     List<Restaurant> findByOwnerId(UUID ownerId);
+
+    // Trova tutti i ristoranti per tipo con paginazione
+    Page<Restaurant> findByRestaurantType(RestaurantType restaurantType, Pageable pageable);
 
 }

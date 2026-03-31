@@ -52,7 +52,7 @@ public class RestaurantService {
         Restaurant restaurant = new Restaurant(
                 currentUser,
                 body.name(),
-                "https://placehold.co/400x200?text=Ristorante",
+                "https://placehold.co/400x200?text=" + body.restaurantType().name().replace("_", "%20"),
                 body.city(),
                 body.address(),
                 body.restaurantType(),
@@ -67,12 +67,22 @@ public class RestaurantService {
 
     // ---------- READ ----------
 
-    public Page<Restaurant> findAll(int page, int size, String orderBy, String sortCriteria) {
+    // Trova tutti i ristoranti con paginazione — se viene passato un tipo filtra per tipo
+    public Page<Restaurant> findAll(int page, int size, String orderBy, String sortCriteria, String restaurantType) {
         Sort.Direction direction = sortCriteria.equalsIgnoreCase("desc")
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, orderBy));
+
+        // Se viene passato un tipo filtra per tipo, altrimenti restituisce tutti
+        if (restaurantType != null && !restaurantType.isEmpty()) {
+            return restaurantRepository.findByRestaurantType(
+                    RestaurantType.valueOf(restaurantType.toUpperCase()),
+                    pageable
+            );
+        }
+
         return restaurantRepository.findAll(pageable);
     }
 
